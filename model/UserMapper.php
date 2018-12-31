@@ -6,9 +6,6 @@ require_once __DIR__ . '/../Database.php';
 class UserMapper extends Exception
 {
     private $database;
-    private $servername;
-    private $username;
-    private $password;
 
     public function __construct()
     {
@@ -21,7 +18,7 @@ class UserMapper extends Exception
         try {
             $conn = $this->database->connect();
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
 
@@ -30,12 +27,11 @@ class UserMapper extends Exception
             return new User($user['name'], $user['email'], $user['password']);
 
         } catch (PDOException $e) {
-            error_log($e->getMessage());
+            throw new PDOException($e);
         }
     }
 
-
-    public function registerUser(string $email, string $name, string $password)
+    public function registerUser(string $name, string $email, string $password)
     {
 
         try {
@@ -55,7 +51,6 @@ class UserMapper extends Exception
 
             $user = new User($name, $email, $password);
 
-
             return $user;
 
 
@@ -63,8 +58,5 @@ class UserMapper extends Exception
             throw new PDOException($e);
 
         }
-
     }
-
-
 }

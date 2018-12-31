@@ -54,11 +54,9 @@ class DefaultController extends AppController
             } catch (PDOException $e) {
                 $message = $e->getCode();
                 error_log($message);
-
-                $this->render('register', ['message' => [ "$message"]]);
+                $this->render('register', ['message' => ["$message"]]);
             }
-        }
-        else{
+        } else {
             $this->render('register');
         }
     }
@@ -73,18 +71,18 @@ class DefaultController extends AppController
 
             try {
                 $user = $mapper->getUser($_POST['email']);
+
+                if (!$user) {
+                    return $this->render('login', ['message' => ['Email not recognized']]);
+                }
+
+                if ($user->getPassword() !== $_POST['password']) {
+                    return $this->render('login', ['message' => ['Wrong password']]);
+                } else {
+                    $this->setSession($user);
+                }
             } catch (PDOException $e) {
                 error_log($e->getMessage());
-            }
-
-            if (!$user) {
-                return $this->render('login', ['message' => ['Email not recognized']]);
-            }
-
-            if ($user->getPassword() !== $_POST['password']) {
-                return $this->render('login', ['message' => ['Wrong password']]);
-            } else {
-                setSession($user);
             }
         }
 
@@ -96,6 +94,6 @@ class DefaultController extends AppController
         session_unset();
         session_destroy();
 
-        $this->render('index', ['text' => 'You have been successfully logged out!']);
+        $this->render('login', ['message' => ['You have been successfully logged out!']]);
     }
 }

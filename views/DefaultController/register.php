@@ -22,7 +22,7 @@
                         <i class="material-icons md-48">person</i>
                     </label>
                     <div class="col-sm-11">
-                        <input type="text" name="name" class="form-control" id="inputName" placeholder="name" type="name" required/>
+                        <input type="text" name="name" class="form-control" id="inputName" placeholder="name" required/>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -38,7 +38,7 @@
                         <i class="material-icons md-48">person</i>
                     </label>
                     <div class="col-sm-11">
-                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password" type="password" required/>
+                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="password"  required/>
                     </div>
                 </div>
                 <input type="submit" value="Register" class="btn btn-primary btn-lg float-right" />

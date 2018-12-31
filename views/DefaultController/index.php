@@ -19,15 +19,20 @@
             print_r($_SESSION);
         }
         ?>
+        <form action="?page=logout" method="POST">
 
-        <div class="position">
+        <input type="submit" value="Logout" class="btn btn-primary btn-lg float-right" />
+
+        </form>
+
+<!--        <div class="position">
             <div id="turquise" class="static">Static</div>
             <div id="blue" class="static">Static</div>
             <div id="violet" class="relative">Relative</div>
 
             <div id="red" class="fixed">Fixed</div>
             <div id="yellow">Default</div>
-        </div>
+        </div>-->
     </div>
 </div>
 
