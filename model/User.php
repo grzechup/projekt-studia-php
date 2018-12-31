@@ -4,7 +4,6 @@ class User
 {
     private $id;
     private $name;
-    private $surname;
     private $email;
     private $password;
     private $role = "ROLE_USER";
@@ -25,16 +24,6 @@ class User
     public function setName($name): void
     {
         $this->name = $name;
-    }
-
-    public function getSurname()
-    {
-        return $this->surname;
-    }
-
-    public function setSurname($surname): void
-    {
-        $this->surname = $surname;
     }
 
     public function getEmail()
