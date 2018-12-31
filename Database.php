@@ -18,15 +18,19 @@ class Database
         $this->database = $this->username;
     }
 
-    public function connect()
+    public function connect() :PDO
     {
         try {
+            syslog(1, "Getting PDO driver");
             return new PDO("mysql:host=$this->servername;dbname=$this->database", $this->username, $this->password);
+
         }
         catch(PDOException $e)
         {
-            return 'Connection failed: ' . $e->getMessage();
+            error_log($e->getMessage());
         }
+
+        return null;
     }
 }
 

@@ -8,10 +8,9 @@ class User
     private $password;
     private $role = "ROLE_USER";
 
-    public function __construct($name, $surname, $email, $password)
+    public function __construct($name, $email, $password)
     {
         $this->name = $name;
-        $this->surname = $surname;
         $this->email = $email;
         $this->password = $password;
     }
