@@ -34,7 +34,15 @@ class Routing
             'player' => [
                 'controller' => 'PlayerController',
                 'action' => 'player'
-            ]
+            ],
+            'files' => [
+                'controller' => 'FilesController',
+                'action' => 'index'
+            ],
+            'delete_file' => [
+                'controller' => 'FilesController',
+                'action' => 'fileDelete'
+            ],
         ];
     }
 
@@ -51,5 +59,4 @@ class Routing
             $object->$action();
         }
     }
-
 }

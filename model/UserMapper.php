@@ -1,6 +1,7 @@
 <?php
 
 require_once 'User.php';
+require_once 'File.php';
 require_once __DIR__ . '/../Database.php';
 
 class UserMapper extends Exception
@@ -18,7 +19,7 @@ class UserMapper extends Exception
         try {
             $conn = $this->database->connect();
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
+            $stmt = $conn->prepare("SELECT * FROM user WHERE email = :email");
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
 
@@ -37,7 +38,7 @@ class UserMapper extends Exception
         try {
             $conn = $this->database->connect();
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare('INSERT INTO users (name, email, password, role) 
+            $stmt = $conn->prepare('INSERT INTO user (name, email, password, role) 
                                                         VALUES(:name, :email, :password, :role)');
 
             $user_role = 'user';
@@ -45,7 +46,7 @@ class UserMapper extends Exception
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':password', $password, PDO::PARAM_STR);
-            $stmt->bindParam(':role',$user_role , PDO::PARAM_STR);
+            $stmt->bindParam(':role', $user_role, PDO::PARAM_STR);
 
             $stmt->execute();
 
@@ -59,4 +60,43 @@ class UserMapper extends Exception
 
         }
     }
+
+    public function getFiles(String $email)
+    {
+
+        try {
+            $conn = $this->database->connect();
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare("SELECT * FROM files WHERE email!= :email;");
+            $stmt->bindParam(':email', $_SESSION['id'], PDO::PARAM_STR);
+
+            $stmt->execute();
+
+
+            $file = new File();
+
+            $file = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $file;
+
+        } catch (PDOException $e) {
+            throw new PDOException($e);
+        }
+
+    }
+
+    public function deleteFile(int $id)
+    {
+
+        try {
+            $stmt = $this->database->connect()->prepare('DELETE FROM files WHERE id=:id;');
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+        } catch (PDOException $e) {
+            die();
+        }
+    }
+
+
 }

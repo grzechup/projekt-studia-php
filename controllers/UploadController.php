@@ -3,12 +3,15 @@
 class UploadController extends AppController
 {
     const MAX_FILE_SIZE = 1024*1024;
-    const SUPPORTED_TYPES = ['video/mp4', 'video/mov'];
+    //const SUPPORTED_TYPES = ['video/mp4', 'video/mov', ];
 
     private $message = [];
 
+    private $database;
+
     public function __construct()
     {
+        $this->database = new Database();
         parent::__construct();
     }
 
@@ -16,12 +19,33 @@ class UploadController extends AppController
     {
         if ($this->isPost() && is_uploaded_file($_FILES['file']['tmp_name']) && $this->validate($_FILES['file'])) {
 
-            move_uploaded_file(
+/*            move_uploaded_file(
                 $_FILES['file']['tmp_name'],
                 dirname(__DIR__).self::UPLOAD_DIRECTORY.$_FILES['file']['name']
-            );
+            );*/
 
-            $this->message[] = 'File uploaded.';
+            $target = "public/upload/".basename($_FILES['file']['name']);
+            $file = $_FILES['file']['name'];
+            $fileName=$_POST['name'];
+            $fileDescription=$_POST['description'];
+
+
+
+            try{
+
+               $conn = $this->database->connect();
+               $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+               $stmt = $conn->prepare('INSERT INTO ');
+
+               $stmt->execute();
+
+               $this->message[] = 'File uploaded';
+            }
+            catch(PDOException $e){
+                $message = $e->getCode();
+                error_log($message);
+                $this->message[] = ''.$message;
+            }
         }
 
         $this->render('upload', [ 'message' => $this->message]);
@@ -34,10 +58,10 @@ class UploadController extends AppController
             return false;
         }
 
-        if (!isset($file['type']) || !in_array($file['type'], self::SUPPORTED_TYPES)) {
+/*        if (!isset($file['type']) || !in_array($file['type'], self::SUPPORTED_TYPES)) {
             $this->message[] = 'File type is not supported.';
             return false;
-        }
+        }*/
 
         return true;
     }

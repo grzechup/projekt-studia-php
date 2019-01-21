@@ -16,7 +16,7 @@ class DefaultController extends AppController
 
     public function index()
     {
-        $text = 'Hello there 👋';
+        $text = 'Hello there, ';
 
         $this->render('index', ['text' => $text]);
     }
@@ -26,6 +26,7 @@ class DefaultController extends AppController
 
         $_SESSION["id"] = $user->getEmail();
         $_SESSION["role"] = $user->getRole();
+        $_SESSION["name"] = $user->getName();
 
         $url = "http://$_SERVER[HTTP_HOST]/";
         header("Location: {$url}?page=index");
@@ -49,8 +50,8 @@ class DefaultController extends AppController
                 } else {
                     $this->setSession($user);
                 }
-//TODO tutaj jak zrobic zeby zlapac wyjatek rzucony przez PDO i zlapac np. to ze jest
-// duplikat rekordow i wtedy wysunac stosowny komunikat a nie sciane tekstu
+            //TODO tutaj jak zrobic zeby zlapac wyjatek rzucony przez PDO i zlapac np. to ze jest
+            // duplikat rekordow i wtedy wysunac stosowny komunikat a nie sciane tekstu
             } catch (PDOException $e) {
                 $message = $e->getCode();
                 error_log($message);
@@ -96,4 +97,6 @@ class DefaultController extends AppController
 
         $this->render('login', ['message' => ['You have been successfully logged out!']]);
     }
+
+
 }

@@ -4,11 +4,13 @@
 <?php include(dirname(__DIR__).'/head.html') ?>
 
 <body>
-
+<div class="container">
+    <a href="?page=login">Login</a>
+</div>
 <div class="container">
     <div clas="row">
         <div class="col-sm-6 offset-sm-3">
-            <h1 class="panel-header">Register</h1>
+            <h1 class="panel-header">Register new account</h1>
             <hr>
             <?php if(isset($message)): ?>
                 <?php foreach($message as $item): ?>

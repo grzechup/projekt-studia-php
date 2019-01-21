@@ -13,10 +13,9 @@
             <?= $text ?>
         </p>
 
-
         <?php
         if(isset($_SESSION) && !empty($_SESSION)) {
-            print_r($_SESSION);
+            print_r($_SESSION["name"]);
         }
         ?>
         <form action="?page=logout" method="POST">
@@ -25,14 +24,6 @@
 
         </form>
 
-<!--        <div class="position">
-            <div id="turquise" class="static">Static</div>
-            <div id="blue" class="static">Static</div>
-            <div id="violet" class="relative">Relative</div>
-
-            <div id="red" class="fixed">Fixed</div>
-            <div id="yellow">Default</div>
-        </div>-->
     </div>
 </div>
 
