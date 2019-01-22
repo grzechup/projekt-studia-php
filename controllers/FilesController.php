@@ -24,10 +24,20 @@ class FilesController extends AppController
     public function files(): void
     {
         $user = new UserMapper();
-        header('Content-type: application/json');
-        http_response_code(200);
+/*        header('Content-type: application/json');
+        http_response_code(200);*/
 
-        echo$user->getFiles() ? json_encode($user->getFiles()) : ' ';
+        $files = array();
+
+        $files = $user->getFiles();
+
+
+
+        //echo $user->getFiles() ? json_encode($user->getFiles()) : ' ';
+
+
+
+
     }
 
     public function fileDelete():void{

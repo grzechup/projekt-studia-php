@@ -61,35 +61,56 @@ class UserMapper extends Exception
         }
     }
 
-    public function getFiles(String $email)
+
+    public function getUserIdFromSessionEmail() : String{
+
+        $conn = $this->database->connect();
+        $stmt2 =$conn-> prepare('SELECT id from user where email = :email');
+
+        $stmt2->bindParam(':email', $_SESSION['id']);
+        $stmt2->execute();
+
+
+        $row = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+        $userId = $row['id'];
+
+        return $userId;
+
+    }
+
+    public function getFiles()
     {
 
         try {
             $conn = $this->database->connect();
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM files WHERE email!= :email;");
-            $stmt->bindParam(':email', $_SESSION['id'], PDO::PARAM_STR);
+            $stmt = $conn->prepare("SELECT * FROM file WHERE id_user = :id_user;");
 
+            $userId = $this->getUserIdFromSessionEmail();
+            $stmt->bindParam(':id_user', $userId, PDO::PARAM_STR);
             $stmt->execute();
 
+            while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+                ?>
+                <td>Nazwa: <?php echo $row['filename']; ?></td>
+                <td>Waga: <?php echo $row['filesize']; ?></td>
+                </br>
+                </tr>
 
-            $file = new File();
+                <?php
+            }
 
-            $file = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            return $file;
 
         } catch (PDOException $e) {
             throw new PDOException($e);
         }
-
     }
 
     public function deleteFile(int $id)
     {
-
         try {
-            $stmt = $this->database->connect()->prepare('DELETE FROM files WHERE id=:id;');
+            $stmt = $this->database->connect()->prepare('DELETE FROM file WHERE id_file=:id;');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -97,6 +118,4 @@ class UserMapper extends Exception
             die();
         }
     }
-
-
 }

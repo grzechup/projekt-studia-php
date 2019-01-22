@@ -64,3 +64,22 @@ INSERT INTO `pai`.`role` (`id_role`, `name`) VALUES ('666', 'admin');
 ALTER TABLE `pai`.`user`
 CHANGE COLUMN `role` `id_role` INT NULL DEFAULT NULL ;
 
+ALTER TABLE `pai`.`file`
+CHANGE COLUMN `id_file` `id_file` INT(11) NOT NULL AUTO_INCREMENT ;
+
+ALTER TABLE `pai`.`file`
+ADD COLUMN `content` BLOB NULL AFTER `file_format`;
+
+
+ALTER TABLE `pai`.`file`
+ADD COLUMN `file_description` VARCHAR(255) NULL AFTER `content`;
+
+
+ALTER TABLE `pai`.`user`
+CHANGE COLUMN `id_role` `role_name` VARCHAR(45) NULL DEFAULT NULL ;
+
+alter table files_user add foreign key (id_file) references file (id_file);
+alter table files_user add foreign key (id_user) references user (id);
+
+ALTER TABLE `pai`.`file`
+ADD COLUMN `id_user` INT NULL AFTER `file_description`;

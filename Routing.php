@@ -2,7 +2,7 @@
 
 require_once('controllers/DefaultController.php');
 require_once('controllers/UploadController.php');
-require_once('controllers/PlayerController.php');
+require_once('controllers/FilesController.php');
 
 class Routing
 {
@@ -37,7 +37,7 @@ class Routing
             ],
             'files' => [
                 'controller' => 'FilesController',
-                'action' => 'index'
+                'action' => 'files'
             ],
             'delete_file' => [
                 'controller' => 'FilesController',

@@ -9,6 +9,7 @@ $(document).ready(function(){
 const apiUrl = "http://localhost:8090";
 
 
+/*
 function getFiles(){
 
 
@@ -25,11 +26,11 @@ function getFiles(){
             $list.append('<tr>
                 <td> ${el.</td>
 
-/*
+/!*
             <td>${el.name}</td>
             <td>${el.surname}</td>
             <td>${el.email}</td>
-            <td>${el.role}</td>*/
+            <td>${el.role}</td>*!/
                 <td>
             <button class="btn btn-danger" type="button" onclick="deleteFile(${el.id})">
                 <i class="material-icons">Delete</i>'
@@ -41,6 +42,7 @@ function getFiles(){
 
 
 }
+*/
 
 
 function deleteFile(id){

@@ -1,11 +1,15 @@
 <?php
 
+require_once "AppController.php";
+require_once __DIR__ . '/../Database.php';
+
 class UploadController extends AppController
 {
-    const MAX_FILE_SIZE = 1024*1024;
+    const MAX_FILE_SIZE = 1024 * 1024 * 2014;
     //const SUPPORTED_TYPES = ['video/mp4', 'video/mov', ];
 
     private $message = [];
+
 
     private $database;
 
@@ -17,38 +21,91 @@ class UploadController extends AppController
 
     public function upload()
     {
-        if ($this->isPost() && is_uploaded_file($_FILES['file']['tmp_name']) && $this->validate($_FILES['file'])) {
-
-/*            move_uploaded_file(
-                $_FILES['file']['tmp_name'],
-                dirname(__DIR__).self::UPLOAD_DIRECTORY.$_FILES['file']['name']
-            );*/
-
-            $target = "public/upload/".basename($_FILES['file']['name']);
-            $file = $_FILES['file']['name'];
-            $fileName=$_POST['name'];
-            $fileDescription=$_POST['description'];
 
 
+        /*if ($this->isPost() && is_uploaded_file($_FILES['file']['tmp_name']) && $this->validate($_FILES['file']))*/
+        if ($this->isPost() && $_FILES['file']['size'] > 0) {
 
-            try{
+            $targetDir = "D:\\Dokumenty\\STUDIA\\PAI\\projekt\\public\\upload\\";
+            $targetFilePath = $targetDir . $_FILES['file']['name'];
 
-               $conn = $this->database->connect();
-               $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-               $stmt = $conn->prepare('INSERT INTO ');
+            $fileName = ($_POST['name']);
+            $fileTmp = $_FILES['file']['tmp_name'];
+            $fileDescription = $_POST['description'];
+            $fileSize = $_FILES['file']['size'];
 
-               $stmt->execute();
 
-               $this->message[] = 'File uploaded';
-            }
-            catch(PDOException $e){
-                $message = $e->getCode();
-                error_log($message);
-                $this->message[] = ''.$message;
-            }
+
+            move_uploaded_file($_FILES['file']['tmp_name'], $targetFilePath);
+
+                try {
+
+                    $userName =  $_SESSION['id'];
+
+                    echo $userName;
+
+
+                    $conn = $this->database->connect();
+
+                    $stmt2 =$conn-> prepare('SELECT id from user where email = :email');
+                    $stmt2->bindParam(':email', $userName);
+
+                    $stmt2->execute();
+
+
+                    $row = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+                    $userId = $row['id'];
+                    echo $userId;
+
+
+
+
+                    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $stmt = $conn->prepare('INSERT INTO file (filename,  filesize, file_format,content, file_description, id_user)
+                                              values (:fileName, :filesize, :fileformat, :content, :description, :id_user  )');
+
+                    $stmt->bindParam(':fileName', $fileName );
+                    $stmt->bindParam(':filesize', $fileSize);
+                    $stmt->bindParam(':fileformat', $fileFormat);
+                     $stmt->bindParam(':content', $fileName);
+                    $stmt->bindParam(':description', $fileDescription);
+                    $stmt->bindParam(':id_user', $userId);
+
+                    $stmt->execute();
+
+                    $file_id = $conn->lastInsertId();
+
+                    echo $file_id;
+
+
+
+
+
+
+
+
+
+                    $stmt3 = $conn -> prepare ('INSERT INTO files_user (id_user, id_file) 
+                                                values (:id_user,:id_file)');
+
+                    $stmt3->bindParam(':id_user', $userId);
+                    $stmt3->bindParam(':id_file', $file_id);
+
+                    $stmt3->execute();
+
+
+                    $this->message[] = 'File uploaded';
+                } catch (PDOException $e) {
+                    $message = $e->getCode();
+                    error_log($message);
+                    $this->message[] = '' . $message;
+                }
+
+
         }
 
-        $this->render('upload', [ 'message' => $this->message]);
+        $this->render('upload', ['message' => $this->message]);
     }
 
     private function validate(array $file): bool
@@ -58,10 +115,10 @@ class UploadController extends AppController
             return false;
         }
 
-/*        if (!isset($file['type']) || !in_array($file['type'], self::SUPPORTED_TYPES)) {
-            $this->message[] = 'File type is not supported.';
-            return false;
-        }*/
+        /*        if (!isset($file['type']) || !in_array($file['type'], self::SUPPORTED_TYPES)) {
+                    $this->message[] = 'File type is not supported.';
+                    return false;
+                }*/
 
         return true;
     }
